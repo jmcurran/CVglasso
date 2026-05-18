@@ -1,26 +1,36 @@
 Package: CVglasso
 Type: Package
 Title: Lasso Penalized Precision Matrix Estimation
-Version: 1.0
-Date: 2018-05-31
-Authors@R: person("Matt", "Galloway", email = "gall0441@umn.edu",
-                  role = c("aut", "cre"))
-Description: Estimates a lasso penalized precision matrix via the blockwise coordinate descent (BCD). This package is a simple wrapper around the popular 'glasso' package and extends and enhances its capabilities. These enhancements include built-in cross validation and visualizations.
-              See Friedman et al (2008) <doi:10.1093/biostatistics/kxm045> for details regarding the estimation method.
-URL: https://github.com/MGallow/CVglasso
-BugReports: https://github.com/MGallow/CVglasso/issues
+Version: 1.0.1
+Authors@R: c(
+    person(
+        given = "Matt", 
+        family = "Galloway", 
+        email = "mattxgalloway@gmail.com",
+        role = c("aut")),
+        person(
+        given = "James",
+        family = "Curran",
+        email = "j.curran@auckland.ac.nz",
+        role = c("aut", "cre")
+    ))
+Description: Estimates a lasso penalized precision matrix via blockwise coordinate descent (BCD). This package is a simple wrapper around the popular 'glasso' package and extends and enhances its capabilities. These enhancements include built-in cross validation and visualizations.
+              See Friedman et al. (2008) <doi:10.1093/biostatistics/kxm045> for details regarding the estimation method.
+URL: https://github.com/jmcurran/CVglasso
+BugReports: https://github.com/jmcurran/CVglasso/issues
 License: GPL (>= 2)
 ByteCompile: TRUE
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 6.0.1
-Imports: stats,
-    parallel,
+RoxygenNote: 7.3.3
+Imports: 
+    doParallel,
+    dplyer
     foreach,
     ggplot2,
-    dplyr,
     glasso
-Depends: doParallel
+    parallel,
+    stats
 Suggests: testthat,
     rmarkdown,
     knitr,

@@ -9,3 +9,5 @@
 ^CVglasso\.pdf$
 ^_pkgdown\.yml$
 ^pkgdown$
+^\.positai$
+^\.claude$

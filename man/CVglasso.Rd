@@ -4,11 +4,24 @@
 \alias{CVglasso}
 \title{Penalized precision matrix estimation}
 \usage{
-CVglasso(X = NULL, S = NULL, nlam = 10, lam.min.ratio = 0.01,
-  lam = NULL, diagonal = FALSE, path = FALSE, tol = 1e-04,
-  maxit = 10000, adjmaxit = NULL, K = 5, crit.cv = c("loglik", "AIC",
-  "BIC"), start = c("warm", "cold"), cores = 1, trace = c("progress",
-  "print", "none"), ...)
+CVglasso(
+  X = NULL,
+  S = NULL,
+  nlam = 10,
+  lam.min.ratio = 0.01,
+  lam = NULL,
+  diagonal = FALSE,
+  path = FALSE,
+  tol = 1e-04,
+  maxit = 10000,
+  adjmaxit = NULL,
+  K = 5,
+  crit.cv = c("loglik", "AIC", "BIC"),
+  start = c("warm", "cold"),
+  cores = 1,
+  trace = c("progress", "print", "none"),
+  ...
+)
 }
 \arguments{
 \item{X}{option to provide a nxp data matrix. Each row corresponds to a single observation and each column contains n observations of a single feature/variable.}
@@ -47,7 +60,7 @@ CVglasso(X = NULL, S = NULL, nlam = 10, lam.min.ratio = 0.01,
 returns class object \code{CVglasso} which includes:
 \item{Call}{function call.}
 \item{Iterations}{number of iterations}
-\item{Tuning}{optimal tuning parameters (lam and alpha).}
+\item{Tuning}{optimal tuning parameter.}
 \item{Lambdas}{grid of lambda values for CV.}
 \item{maxit}{maximum number of iterations for outer (blockwise) loop.}
 \item{Omega}{estimated penalized precision matrix.}

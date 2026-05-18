@@ -4,8 +4,7 @@
 \alias{plot.CVglasso}
 \title{Plot CVglasso object}
 \usage{
-\method{plot}{CVglasso}(x, type = c("line", "heatmap"), footnote = TRUE,
-  ...)
+\method{plot}{CVglasso}(x, type = c("line", "heatmap"), footnote = TRUE, ...)
 }
 \arguments{
 \item{x}{class object CVglasso}

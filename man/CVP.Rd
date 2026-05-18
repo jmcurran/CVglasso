@@ -4,10 +4,20 @@
 \alias{CVP}
 \title{Parallel Cross Validation}
 \usage{
-CVP(X = NULL, lam = 10^seq(-2, 2, 0.2), diagonal = FALSE, tol = 1e-04,
-  maxit = 10000, adjmaxit = NULL, K = 5, crit.cv = c("loglik", "AIC",
-  "BIC"), start = c("warm", "cold"), cores = 1, trace = c("progress",
-  "print", "none"), ...)
+CVP(
+  X = NULL,
+  lam = 10^seq(-2, 2, 0.2),
+  diagonal = FALSE,
+  tol = 1e-04,
+  maxit = 10000,
+  adjmaxit = NULL,
+  K = 5,
+  crit.cv = c("loglik", "AIC", "BIC"),
+  start = c("warm", "cold"),
+  cores = 1,
+  trace = c("progress", "print", "none"),
+  ...
+)
 }
 \arguments{
 \item{X}{nxp data matrix. Each row corresponds to a single observation and each column contains n observations of a single feature/variable.}
