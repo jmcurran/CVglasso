@@ -25,10 +25,10 @@ LazyData: true
 RoxygenNote: 7.3.3
 Imports: 
     doParallel,
-    dplyer
+    dplyr,
     foreach,
     ggplot2,
-    glasso
+    glasso,
     parallel,
     stats
 Suggests: testthat,
