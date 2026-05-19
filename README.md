@@ -4,6 +4,9 @@ CVglasso
 [![R-CMD-check](https://github.com/jmcurran/CVglasso/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/jmcurran/CVglasso/actions/workflows/R-CMD-check.yaml)
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/CVglasso)](https://cran.r-project.org/package=CVglasso)
 
+**NOTE:** This package was created by Matt Galloway. James Curran only the current maintainer to keep it on CRAN; credit belongs to 
+the original author.
+
 ## Overview
 
 `CVglasso` is an R package that estimates a lasso-penalized precision

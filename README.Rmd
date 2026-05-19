@@ -12,6 +12,12 @@ library(magrittr)
 [![R-CMD-check](https://github.com/jmcurran/CVglasso/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/jmcurran/CVglasso/actions/workflows/R-CMD-check.yaml)
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/CVglasso)](https://cran.r-project.org/package=CVglasso)
 
+## Note
+
+**NOTE:** This package was created by Matt Galloway. James Curran only the current maintainer to keep it on CRAN; credit belongs to 
+the original author.
+
+
 ## Overview
 
 `CVglasso` is an R package that estimates a lasso-penalized precision matrix via block-wise coordinate descent -- also known as the graphical lasso (glasso) algorithm. This package is a simple wrapper around the popular [glasso](https://cran.r-project.org/web/packages/glasso/index.html) package and extends and enhances its capabilities. These enhancements include built-in cross validation and visualizations.
