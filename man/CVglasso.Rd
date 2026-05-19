@@ -85,10 +85,6 @@ following optimization problem:
 where \eqn{\lambda > 0} and we define
 \eqn{\left\|A \right\|_{1} = \sum_{i, j} \left| A_{ij} \right|}.
 }
-\details{
-For details on the implementation of the 'glasso' function, see Tibshirani's website.
-\url{http://statweb.stanford.edu/~tibs/glasso/}.
-}
 \examples{
 # generate data from a sparse matrix
 # first compute covariance matrix
@@ -120,7 +116,7 @@ CVglasso(X, trace = 'none')
 \item Tibshirani, Robert, Bien, Jacob, Friedman, Jerome, Hastie, Trevor, Simon, Noah, Jonathan, Taylor, and Tibshirani, Ryan J. 'Strong Rules for Discarding Predictors in Lasso-Type Problems.' \emph{Journal of the Royal Statistical Society: Series B (Statistical Methodology)}. Wiley Online Library 74 (2): 245-266.
 \item Ghaoui, Laurent El, Viallon, Vivian, and Rabbani, Tarek. 2010. 'Safe Feature Elimination for the Lasso and Sparse Supervised Learning Problems.' \emph{arXiv preprint arXiv: 1009.4219}.
 \item Osborne, Michael R, Presnell, Brett, and Turlach, Berwin A. 'On the Lasso and its Dual.' \emph{Journal of Computational and Graphical Statistics}. Taylor and Francis 9 (2): 319-337.
-\item Rothman, Adam. 2017. 'STAT 8931 notes on an algorithm to compute the Lasso-penalized Gausssian likelihood precision matrix estimator.' 
+\item Rothman, Adam. 2017. 'STAT 8931 notes on an algorithm to compute the Lasso-penalized Gausssian likelihood precision matrix estimator.'
 }
 }
 \seealso{
