@@ -12,4 +12,3 @@
 ^\.positai$
 ^\.claude$
 ^vignettes/cache$
-^vignettes$
