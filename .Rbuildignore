@@ -12,3 +12,6 @@
 ^\.positai$
 ^\.claude$
 ^vignettes/cache$
+
+^vignettes/.*\.html$
+^vignettes/.*_files$
