@@ -10,7 +10,7 @@ vignette: >
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, cache = TRUE, tidy = TRUE)
+knitr::opts_chunk$set(echo = TRUE, cache = FALSE, tidy = TRUE)
 ```
 
 
@@ -98,8 +98,8 @@ By default, `CVglasso` will estimate $\Omega$ using a lasso penalty (like `glass
 <br>\vspace{0.5cm}
 ```{r, message = FALSE, echo = TRUE}
 
-# cross validation for lam
-CVglasso(X, trace = "none")
+# cross validation for lam (small grid/folds for vignette speed)
+CVglasso(X, nlam = 4, K = 3, trace = "none")
 
 ```
 <br>\vspace{0.5cm}
@@ -111,8 +111,8 @@ In the heatmap plot below, the more bright (white) areas of the heat map corresp
 <br>\vspace{0.5cm}
 ```{r, message = FALSE, echo = TRUE}
 
-# produce CV heat map
-CV = CVglasso(X, trace = "none")
+# produce CV heat map from the same small vignette fit
+CV = CVglasso(X, nlam = 4, K = 3, trace = "none")
 plot(CV, type = "heatmap")
 
 ```
@@ -135,10 +135,10 @@ plot(CV, type = "line")
 ```{r, message = FALSE, echo = TRUE}
 
 # AIC
-plot(CVglasso(X, crit.cv = "AIC", trace = "none"))
+plot(CVglasso(X, nlam = 4, K = 3, crit.cv = "AIC", trace = "none"))
 
 # BIC
-plot(CVglasso(X, crit.cv = "BIC", trace = "none"))
+plot(CVglasso(X, nlam = 4, K = 3, crit.cv = "BIC", trace = "none"))
 
 ```
 <br>\vspace{0.5cm}
@@ -146,7 +146,7 @@ plot(CVglasso(X, crit.cv = "BIC", trace = "none"))
 This allows the user to select appropriate tuning parameters under various decision criteria. We also have the option to print *all* of the estimated precision matrices for each tuning parameter combination using the `path` option. This option should be used with *extreme* care when the dimension and sample size is large -- you may run into memory issues.
 
 <br>\vspace{0.5cm}
-```{r, message = FALSE, echo = TRUE}
+```{r, message = FALSE, echo = TRUE, eval = FALSE}
 
 # keep all estimates using path
 CV = CVglasso(X, path = TRUE, trace = "none")
@@ -206,7 +206,8 @@ CV = CVglasso(X, maxit = 1e3)
 ```
 <br>\vspace{0.5cm}
 
- - We can also opt to run our cross validation procedure in parallel. The user should check how many cores are on their system before using this option.
+ - We can also opt to run our cross validation procedure in parallel. For
+ reproducible CRAN vignette builds, this remains a non-evaluated example.
 
 <br>\vspace{0.5cm}
 ```{r, message = FALSE, echo = TRUE, eval = FALSE}
