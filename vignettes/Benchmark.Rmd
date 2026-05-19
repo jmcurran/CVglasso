@@ -13,7 +13,7 @@ vignette: >
 knitr::opts_chunk$set(echo = TRUE, cache = FALSE, tidy = TRUE)
 ```
 
-This is a short effort to give users an idea of how long the functions take to process. The benchmarks were performed using the default R install on [Travis CI](https://travis-ci.org/).
+This is a short effort to give users an idea of how long the functions take to process. The benchmark examples below are illustrative; exact timings vary by platform and R version.
 
 We will be estimating a tri-diagonal precision matrix with dimension $p = 100$:
 
@@ -91,4 +91,3 @@ microbenchmark(CVglasso(X, cores = 2, trace = "none"), times = 5)
 
 ```
 <br>\vspace{0.5cm}
-

@@ -3,7 +3,7 @@ pkgdown: 1.0.0
 pkgdown_sha: ~
 
 title: CVglasso
-url: https://mgallow.github.io/CVglasso/
+url: https://jmcurran.github.io/CVglasso/
 template:
   params:
     bootswatch: flatly
@@ -39,7 +39,7 @@ navbar:
       href: news/index.html
     - icon: fa-github fa-lg
       #text: "Github"
-      href: https://github.com/MGallow/CVglasso/
+      href: https://github.com/jmcurran/CVglasso/
     - icon: fa-user fa-lg
-      text: "MGallow"
-      href: https://mgallow.github.io/
+      text: "jmcurran"
+      href: https://github.com/jmcurran/

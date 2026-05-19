@@ -2,7 +2,7 @@
 ^\.Rproj\.user$
 ^README\.Rmd$
 ^README\.md$
-^\.travis\.yml$
+^\.github$
 ^lik\.gif$
 ^docs$
 ^README_files$
