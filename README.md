@@ -1,8 +1,7 @@
 CVglasso
 ================
 
-[![Build
-Status](https://travis-ci.org/MGallow/CVglasso.svg?branch=master)](https://travis-ci.org/MGallow/CVglasso)
+[![R-CMD-check](https://github.com/jmcurran/CVglasso/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/jmcurran/CVglasso/actions/workflows/R-CMD-check.yaml)
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/CVglasso)](https://cran.r-project.org/package=CVglasso)
 
 ## Overview
@@ -18,7 +17,7 @@ visualizations.
 
 <p align="center">
 
-<img src = "https://github.com/MGallow/CVglasso/raw/master/vignettes/images/gif.gif"/>
+<img src = "https://github.com/jmcurran/CVglasso/raw/master/vignettes/images/gif.gif"/>
 
 </p>
 
@@ -30,8 +29,8 @@ be found below:
   - `plot.CVglasso()` produces a heat map or line graph for cross
     validation errors
 
-See package [website](https://mgallow.github.io/CVglasso/) or
-[manual](https://github.com/MGallow/CVglasso/blob/master/CVglasso.pdf).
+See package [website](https://jmcurran.github.io/CVglasso/) or
+[manual](https://github.com/jmcurran/CVglasso/blob/master/CVglasso.pdf).
 
 ## Installation
 
@@ -41,13 +40,12 @@ install.packages("CVglasso")
 
 # You can also install the development version from GitHub:
 # install.packages("devtools")
-devtools::install_github("MGallow/CVglasso")
+devtools::install_github("jmcurran/CVglasso")
 ```
 
-If there are any issues/bugs, please let me know:
-[github](https://github.com/MGallow/CVglasso/issues). You can also
-contact me via my [website](https://mgallow.github.io/). Pull requests
-are welcome\!
+If there are any issues/bugs, please file them on
+[GitHub](https://github.com/jmcurran/CVglasso/issues). Pull requests are
+welcome\!
 
 ## Usage
 
