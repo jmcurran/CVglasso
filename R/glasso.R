@@ -2,7 +2,7 @@
 
 
 #' @title Penalized precision matrix estimation
-#' 
+#'
 #' @description Penalized precision matrix estimation using the graphical lasso (glasso) algorithm.
 #' Consider the case where \eqn{X_{1}, ..., X_{n}} are iid \eqn{N_{p}(\mu,
 #' \Sigma)} and we are tasked with estimating the precision matrix,
@@ -16,10 +16,8 @@
 #' }
 #' where \eqn{\lambda > 0} and we define
 #' \eqn{\left\|A \right\|_{1} = \sum_{i, j} \left| A_{ij} \right|}.
-#' 
-#' @details For details on the implementation of the 'glasso' function, see Tibshirani's website.
-#' \url{http://statweb.stanford.edu/~tibs/glasso/}.
-#' 
+#'
+#'
 #' @param X option to provide a nxp data matrix. Each row corresponds to a single observation and each column contains n observations of a single feature/variable.
 #' @param S option to provide a pxp sample covariance matrix (denominator n). If argument is \code{NULL} and \code{X} is provided instead then \code{S} will be computed automatically.
 #' @param nlam number of \code{lam} tuning parameters for penalty term generated from \code{lam.min.ratio} and \code{lam.max} (automatically generated). Defaults to 10.
@@ -36,7 +34,7 @@
 #' @param cores option to run CV in parallel. Defaults to \code{cores = 1}.
 #' @param trace option to display progress of CV. Choose one of \code{progress} to print a progress bar, \code{print} to print completed tuning parameters, or \code{none}.
 #' @param ... additional arguments to pass to \code{glasso}.
-#' 
+#'
 #' @return returns class object \code{CVglasso} which includes:
 #' \item{Call}{function call.}
 #' \item{Iterations}{number of iterations}
@@ -49,7 +47,7 @@
 #' \item{MIN.error}{minimum average cross validation error (cv.crit) for optimal parameters.}
 #' \item{AVG.error}{average cross validation error (cv.crit) across all folds.}
 #' \item{CV.error}{cross validation errors (cv.crit).}
-#' 
+#'
 #' @references
 #' \itemize{
 #' \item Friedman, Jerome, Trevor Hastie, and Robert Tibshirani. 'Sparse inverse covariance estimation with the graphical lasso.' \emph{Biostatistics} 9.3 (2008): 432-441.
@@ -60,15 +58,15 @@
 #' \item Tibshirani, Robert, Bien, Jacob, Friedman, Jerome, Hastie, Trevor, Simon, Noah, Jonathan, Taylor, and Tibshirani, Ryan J. 'Strong Rules for Discarding Predictors in Lasso-Type Problems.' \emph{Journal of the Royal Statistical Society: Series B (Statistical Methodology)}. Wiley Online Library 74 (2): 245-266.
 #' \item Ghaoui, Laurent El, Viallon, Vivian, and Rabbani, Tarek. 2010. 'Safe Feature Elimination for the Lasso and Sparse Supervised Learning Problems.' \emph{arXiv preprint arXiv: 1009.4219}.
 #' \item Osborne, Michael R, Presnell, Brett, and Turlach, Berwin A. 'On the Lasso and its Dual.' \emph{Journal of Computational and Graphical Statistics}. Taylor and Francis 9 (2): 319-337.
-#' \item Rothman, Adam. 2017. 'STAT 8931 notes on an algorithm to compute the Lasso-penalized Gausssian likelihood precision matrix estimator.' 
+#' \item Rothman, Adam. 2017. 'STAT 8931 notes on an algorithm to compute the Lasso-penalized Gausssian likelihood precision matrix estimator.'
 #' }
-#' 
+#'
 #' @author Matt Galloway \email{gall0441@@umn.edu}
-#' 
+#'
 #' @seealso \code{\link{plot.CVglasso}}
-#' 
+#'
 #' @export
-#' 
+#'
 #' @examples
 #' # generate data from a sparse matrix
 #' # first compute covariance matrix
@@ -92,12 +90,12 @@
 
 # we define the CVglasso precision matrix estimation
 # function
-CVglasso = function(X = NULL, S = NULL, nlam = 10, lam.min.ratio = 0.01, 
-    lam = NULL, diagonal = FALSE, path = FALSE, tol = 1e-04, 
-    maxit = 10000, adjmaxit = NULL, K = 5, crit.cv = c("loglik", 
-        "AIC", "BIC"), start = c("warm", "cold"), cores = 1, 
+CVglasso = function(X = NULL, S = NULL, nlam = 10, lam.min.ratio = 0.01,
+    lam = NULL, diagonal = FALSE, path = FALSE, tol = 1e-04,
+    maxit = 10000, adjmaxit = NULL, K = 5, crit.cv = c("loglik",
+        "AIC", "BIC"), start = c("warm", "cold"), cores = 1,
     trace = c("progress", "print", "none"), ...) {
-    
+
     # checks
     if (is.null(X) && is.null(S)) {
         stop("Must provide entry for X or S!")
@@ -108,7 +106,7 @@ CVglasso = function(X = NULL, S = NULL, nlam = 10, lam.min.ratio = 0.01,
     if (!(all(c(tol, maxit, adjmaxit, K, cores) > 0))) {
         stop("Entry must be positive!")
     }
-    if (!(all(sapply(c(tol, maxit, adjmaxit, K, cores, nlam, 
+    if (!(all(sapply(c(tol, maxit, adjmaxit, K, cores, nlam,
         lam.min.ratio), length) <= 1))) {
         stop("Entry must be single value!")
     }
@@ -130,7 +128,7 @@ CVglasso = function(X = NULL, S = NULL, nlam = 10, lam.min.ratio = 0.01,
     if (is.null(adjmaxit)) {
         adjmaxit = maxit
     }
-    
+
     # match values
     crit.cv = match.arg(crit.cv)
     start = match.arg(start)
@@ -138,15 +136,15 @@ CVglasso = function(X = NULL, S = NULL, nlam = 10, lam.min.ratio = 0.01,
     call = match.call()
     MIN.error = AVG.error = CV.error = NULL
     n = ifelse(is.null(X), nrow(S), nrow(X))
-    
+
     # compute sample covariance matrix, if necessary
     if (is.null(S)) {
         S = (nrow(X) - 1)/nrow(X) * cov(X)
     }
-    
+
     Sminus = S
     diag(Sminus) = 0
-    
+
     # compute grid of lam values, if necessary
     if (is.null(lam)) {
         if (!((lam.min.ratio <= 1) && (lam.min.ratio > 0))) {
@@ -157,144 +155,144 @@ CVglasso = function(X = NULL, S = NULL, nlam = 10, lam.min.ratio = 0.01,
             cat("nlam must be a positive integer... setting to 10!\n\n")
             nlam = 10
         }
-        
+
         # calculate lam.max and lam.min
         lam.max = max(abs(Sminus))
         lam.min = lam.min.ratio * lam.max
-        
+
         # calculate grid of lambda values
         lam = 10^seq(log10(lam.min), log10(lam.max), length = nlam)
-        
+
     } else {
-        
+
         # sort lambda values
         lam = sort(lam)
-        
+
     }
-    
+
     # perform cross validation, if necessary
     if ((length(lam) > 1) & (!is.null(X) || path)) {
-        
+
         # run CV in parallel?
         if (cores > 1) {
-            
+
             # execute CVP
-            GLASSO = CVP(X = X, lam = lam, diagonal = diagonal, 
-                tol = tol, maxit = maxit, adjmaxit = adjmaxit, 
-                K = K, crit.cv = crit.cv, start = start, cores = cores, 
+            GLASSO = CVP(X = X, lam = lam, diagonal = diagonal,
+                tol = tol, maxit = maxit, adjmaxit = adjmaxit,
+                K = K, crit.cv = crit.cv, start = start, cores = cores,
                 trace = trace, ...)
             MIN.error = GLASSO$min.error
             AVG.error = GLASSO$avg.error
             CV.error = GLASSO$cv.error
-            
+
         } else {
-            
+
             # execute CV_ADMMc
             if (is.null(X)) {
                 X = matrix(0)
             }
-            GLASSO = CV(X = X, S = S, lam = lam, diagonal = diagonal, 
-                path = path, tol = tol, maxit = maxit, adjmaxit = adjmaxit, 
-                K = K, crit.cv = crit.cv, start = start, trace = trace, 
+            GLASSO = CV(X = X, S = S, lam = lam, diagonal = diagonal,
+                path = path, tol = tol, maxit = maxit, adjmaxit = adjmaxit,
+                K = K, crit.cv = crit.cv, start = start, trace = trace,
                 ...)
             MIN.error = GLASSO$min.error
             AVG.error = GLASSO$avg.error
             CV.error = GLASSO$cv.error
             Path = GLASSO$path
-            
+
         }
-        
+
         # print warning if lam on boundary
-        if ((GLASSO$lam == lam[1]) && (length(lam) != 1) && 
+        if ((GLASSO$lam == lam[1]) && (length(lam) != 1) &&
             !path) {
             cat("\nOptimal tuning parameter on boundary... consider providing a smaller lam value or decreasing lam.min.ratio!")
         }
-        
+
         # specify initial estimate for Sigma
         if (diagonal) {
-            
+
             # simply force init to be positive definite final diagonal
             # elements will be increased by lam
             init = S + GLASSO$lam
-            
+
         } else {
-            
+
             # provide estimate that is pd and dual feasible
             alpha = min(c(GLASSO$lam/max(abs(Sminus)), 1))
             init = (1 - alpha) * S
             diag(init) = diag(S)
-            
+
         }
-        
+
         # compute final estimate at best tuning parameters
         lam_ = GLASSO$lam
-        GLASSO = glasso(s = S, rho = lam_, thr = tol, maxit = maxit, 
-            penalize.diagonal = diagonal, start = "warm", 
-            w.init = init, wi.init = diag(ncol(S)), trace = FALSE, 
+        GLASSO = glasso(s = S, rho = lam_, thr = tol, maxit = maxit,
+            penalize.diagonal = diagonal, start = "warm",
+            w.init = init, wi.init = diag(ncol(S)), trace = FALSE,
             ...)
         GLASSO$lam = lam_
-        
-        
+
+
     } else {
-        
+
         # execute ADMM_sigmac
         if (length(lam) > 1) {
             stop("Must set specify X, set path = TRUE, or provide single value for lam.")
         }
-        
+
         # specify initial estimate for Sigma
         if (diagonal) {
-            
+
             # simply force init to be positive definite final diagonal
             # elements will be increased by lam
             init = S + lam
-            
+
         } else {
-            
+
             # provide estimate that is pd and dual feasible
             alpha = min(c(lam/max(abs(Sminus)), 1))
             init = (1 - alpha) * S
             diag(init) = diag(S)
-            
+
         }
-        
-        GLASSO = glasso(s = S, rho = lam, thr = tol, maxit = maxit, 
-            penalize.diagonal = diagonal, start = "warm", 
-            w.init = init, wi.init = diag(ncol(S)), trace = FALSE, 
+
+        GLASSO = glasso(s = S, rho = lam, thr = tol, maxit = maxit,
+            penalize.diagonal = diagonal, start = "warm",
+            w.init = init, wi.init = diag(ncol(S)), trace = FALSE,
             ...)
         GLASSO$lam = lam
-        
+
     }
-    
-    
+
+
     # option to penalize diagonal
     if (diagonal) {
         C = 1
     } else {
         C = 1 - diag(ncol(S))
     }
-    
+
     # compute penalized loglik
-    loglik = (-n/2) * (sum(GLASSO$wi * S) - determinant(GLASSO$wi, 
-        logarithm = TRUE)$modulus[1] + GLASSO$lam * sum(abs(C * 
+    loglik = (-n/2) * (sum(GLASSO$wi * S) - determinant(GLASSO$wi,
+        logarithm = TRUE)$modulus[1] + GLASSO$lam * sum(abs(C *
         GLASSO$wi)))
-    
-    
+
+
     # return values
     tuning = matrix(c(log10(GLASSO$lam), GLASSO$lam), ncol = 2)
     colnames(tuning) = c("log10(lam)", "lam")
     if (!path) {
         Path = NULL
     }
-    
-    returns = list(Call = call, Iterations = GLASSO$niter, 
-        Tuning = tuning, Lambdas = lam, maxit = maxit, Omega = GLASSO$wi, 
-        Sigma = GLASSO$w, Path = Path, Loglik = loglik, MIN.error = MIN.error, 
+
+    returns = list(Call = call, Iterations = GLASSO$niter,
+        Tuning = tuning, Lambdas = lam, maxit = maxit, Omega = GLASSO$wi,
+        Sigma = GLASSO$w, Path = Path, Loglik = loglik, MIN.error = MIN.error,
         AVG.error = AVG.error, CV.error = CV.error)
-    
+
     class(returns) = "CVglasso"
     return(returns)
-    
+
 }
 
 
@@ -313,28 +311,28 @@ CVglasso = function(X = NULL, S = NULL, nlam = 10, lam.min.ratio = 0.01,
 #' @keywords internal
 #' @export
 print.CVglasso = function(x, ...) {
-    
+
     # print warning if maxit reached
     if (x$maxit <= x$Iterations) {
         cat("\nMaximum iterations reached...!")
     }
-    
+
     # print call
-    cat("\n\nCall: ", paste(deparse(x$Call), sep = "\n", collapse = "\n"), 
+    cat("\n\nCall: ", paste(deparse(x$Call), sep = "\n", collapse = "\n"),
         "\n", sep = "")
-    
+
     # print iterations
     cat("\nIterations:\n")
     print.default(x$Iterations, quote = FALSE)
-    
+
     # print optimal tuning parameters
     cat("\nTuning parameter:\n")
     print.default(round(x$Tuning, 3), print.gap = 2L, quote = FALSE)
-    
+
     # print loglik
-    cat("\nLog-likelihood: ", paste(round(x$Loglik, 5), sep = "\n", 
+    cat("\nLog-likelihood: ", paste(round(x$Loglik, 5), sep = "\n",
         collapse = "\n"), "\n", sep = "")
-    
+
     # print Omega if dim <= 10
     if (nrow(x$Omega) <= 10) {
         cat("\nOmega:\n")
@@ -342,7 +340,7 @@ print.CVglasso = function(x, ...) {
     } else {
         cat("\n(...output suppressed due to large dimension!)\n")
     }
-    
+
 }
 
 
@@ -376,67 +374,67 @@ print.CVglasso = function(x, ...) {
 #' S.sqrt = out$vectors %*% diag(out$values^0.5)
 #' S.sqrt = S.sqrt %*% t(out$vectors)
 #' X = Z %*% S.sqrt
-#' 
+#'
 #' # produce line graph for CVglasso
 #' plot(CVglasso(X, trace = 'none'))
-#' 
+#'
 #' # produce CV heat map for CVglasso
 #' plot(CVglasso(X, trace = 'none'), type = 'heatmap')
 
-plot.CVglasso = function(x, type = c("line", "heatmap"), footnote = TRUE, 
+plot.CVglasso = function(x, type = c("line", "heatmap"), footnote = TRUE,
     ...) {
-    
+
     # check
     type = match.arg(type)
     Means = NULL
     if (is.null(x$CV.error)) {
         stop("No cross validation errors to plot!")
     }
-    
+
     if (type == "line") {
-        
+
         # gather values to plot
-        cv = cbind(expand.grid(lam = x$Lambdas, alpha = 0), 
+        cv = cbind(expand.grid(lam = x$Lambdas, alpha = 0),
             Errors = as.data.frame.table(x$CV.error)$Freq)
-        
+
         # produce line graph
-        graph = ggplot(summarise(group_by(cv, lam), Means = mean(Errors)), 
-            aes(log10(lam), Means)) + geom_jitter(width = 0.2, 
-            color = "navy blue") + theme_minimal() + geom_line(color = "red") + 
-            labs(title = "Cross-Validation Errors", y = "Error") + 
+        graph = ggplot(summarise(group_by(cv, lam), Means = mean(Errors)),
+            aes(log10(lam), Means)) + geom_jitter(width = 0.2,
+            color = "navy blue") + theme_minimal() + geom_line(color = "red") +
+            labs(title = "Cross-Validation Errors", y = "Error") +
             geom_vline(xintercept = x$Tuning[1], linetype = "dotted")
-        
+
     } else {
-        
+
         # augment values for heat map (helps visually)
         lam = x$Lambdas
         cv = expand.grid(lam = lam, alpha = 0)
-        Errors = 1/(c(x$AVG.error) + abs(min(x$AVG.error)) + 
+        Errors = 1/(c(x$AVG.error) + abs(min(x$AVG.error)) +
             1)
         cv = cbind(cv, Errors)
-        
+
         # design color palette
         bluetowhite <- c("#000E29", "white")
-        
+
         # produce ggplot heat map
-        graph = ggplot(cv, aes(alpha, log10(lam))) + geom_raster(aes(fill = Errors)) + 
-            scale_fill_gradientn(colours = colorRampPalette(bluetowhite)(2), 
-                guide = "none") + theme_minimal() + labs(title = "Heatmap of Cross-Validation Errors") + 
-            theme(axis.title.x = element_blank(), axis.text.x = element_blank(), 
+        graph = ggplot(cv, aes(alpha, log10(lam))) + geom_raster(aes(fill = Errors)) +
+            scale_fill_gradientn(colours = colorRampPalette(bluetowhite)(2),
+                guide = "none") + theme_minimal() + labs(title = "Heatmap of Cross-Validation Errors") +
+            theme(axis.title.x = element_blank(), axis.text.x = element_blank(),
                 axis.ticks.x = element_blank())
-        
+
     }
-    
+
     if (footnote) {
-        
+
         # produce with footnote
-        graph + labs(caption = paste("**Optimal: log10(lam) = ", 
+        graph + labs(caption = paste("**Optimal: log10(lam) = ",
             round(x$Tuning[1], 3), sep = ""))
-        
+
     } else {
-        
+
         # produce without footnote
         graph
-        
+
     }
 }
