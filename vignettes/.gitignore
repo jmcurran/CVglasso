@@ -1,0 +1,6 @@
+# knitr cache artifacts
+cache/
+
+# common vignette byproducts
+*.html
+*_files/
