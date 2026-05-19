@@ -10,7 +10,7 @@ vignette: >
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, cache = TRUE, tidy = TRUE)
+knitr::opts_chunk$set(echo = TRUE, cache = FALSE, tidy = TRUE)
 ```
 
 This is a short effort to give users an idea of how long the functions take to process. The benchmarks were performed using the default R install on [Travis CI](https://travis-ci.org/).
@@ -20,7 +20,6 @@ We will be estimating a tri-diagonal precision matrix with dimension $p = 100$:
 <br>\vspace{0.5cm}
 ```{r, message = FALSE}
 library(CVglasso)
-library(microbenchmark)
 
 #  generate data from tri-diagonal (sparse) matrix
 # compute covariance matrix (can confirm inverse is tri-diagonal)
@@ -45,12 +44,16 @@ sample = (nrow(X) - 1)/nrow(X)*cov(X)
 ```
 <br>\vspace{0.5cm}
 
+The code chunks below show how to run local benchmarks. To keep CRAN vignette
+builds fast and deterministic, these chunks are not evaluated during rendering.
+
  - Default convergence tolerance with specified tuning parameter (no cross validation):
 
 <br>\vspace{0.5cm}
-```{r, message = FALSE}
+```{r, message = FALSE, eval = FALSE}
 
 # benchmark CVglasso - defaults
+library(microbenchmark)
 microbenchmark(CVglasso(S = sample, lam = 0.1, trace = "none"))
 
 ```
@@ -59,7 +62,7 @@ microbenchmark(CVglasso(S = sample, lam = 0.1, trace = "none"))
  - Stricter convergence tolerance with specified tuning parameter (no cross validation):
 
 <br>\vspace{0.5cm}
-```{r, message = FALSE}
+```{r, message = FALSE, eval = FALSE}
 
 # benchmark CVglasso - tolerance 1e-6
 microbenchmark(CVglasso(S = sample, lam = 0.1, tol = 1e-6, trace = "none"))
@@ -70,7 +73,7 @@ microbenchmark(CVglasso(S = sample, lam = 0.1, tol = 1e-6, trace = "none"))
  - Default convergence tolerance with cross validation for `lam`:
 
 <br>\vspace{0.5cm}
-```{r, message = FALSE}
+```{r, message = FALSE, eval = FALSE}
 
 # benchmark CVglasso CV - default parameter grid
 microbenchmark(CVglasso(X, trace = "none"), times = 5)
@@ -81,12 +84,11 @@ microbenchmark(CVglasso(X, trace = "none"), times = 5)
  - Parallel (`cores = 2`) cross validation:
 
 <br>\vspace{0.5cm}
-```{r, message = FALSE}
+```{r, message = FALSE, eval = FALSE}
 
 # benchmark CVglasso parallel CV
 microbenchmark(CVglasso(X, cores = 2, trace = "none"), times = 5)
 
 ```
 <br>\vspace{0.5cm}
-
 
