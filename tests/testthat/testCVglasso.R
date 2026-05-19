@@ -1,4 +1,4 @@
-testthat::set.seed(1)
+set.seed(1)
 
 # generate data from a sparse matrix
 S <- matrix(0.7, nrow = 5, ncol = 5)
