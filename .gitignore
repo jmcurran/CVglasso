@@ -11,7 +11,6 @@ src/*.dll
 .rdb
 .rdx
 CVglasso.Rproj
-inst/doc
 docs
 vignettes/Tutorial_cache/
 vignettes/Benchmark_cache/

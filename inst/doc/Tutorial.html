@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>CVglasso Tutorial</title>
+<style>body{font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;max-width:900px;margin:2rem auto;line-height:1.5;padding:0 1rem}pre{background:#f6f8fa;padding:1rem;overflow:auto}code{background:#f6f8fa;padding:0.1rem 0.2rem}.note{color:#555}</style>
+</head>
+<body>
+<h1>CVglasso Tutorial</h1>
+<p class="note">Installed vignette output for <code>Tutorial.Rmd</code>.</p>
+<h2>Introduction</h2>
+<p>In many statistical applications, estimating the covariance for a set of random variables is a critical task. The covariance is useful because it characterizes the <em>relationship</em> between variables. For instance, suppose we have three variables $X, Y, \mbox{ and } Z$ and their covariance matrix is of the form</p>
+<pre class="math">\[ \Sigma_{xyz} = \begin{pmatrix}</pre>
+<p>1 &amp; 0 &amp; 0.5 \\ 0 &amp; 1 &amp; 0 \\ 0.5 &amp; 0 &amp; 1 \end{pmatrix} \]</p>
+<p>We can gather valuable information from this matrix. First of all, we know that each of the variables has an equal variance of 1. Second,  we know that variables $X$ and $Y$ are likely independent because the covariance between the two is equal to 0. This implies that any information in $X$ is useless in trying to gather information about $Y$. Lastly, we know that variables $X$ and $Z$ are moderately, positively correlated because their covariance is 0.5.</p>
+<p>Unfortunately, estimating $\Sigma$ well is often computationally expensive and, in a few settings, extremely challenging. For this reason, emphasis in the literature and elsewhere has been placed on estimating the inverse of $\Sigma$ which we like to denote as $\Omega \equiv \Sigma^{-1}$.</p>
+<p><code>glasso</code> is a popular R package which estimates $\Omega$ extremely efficiently using the graphical lasso algorithm. <code>CVglasso</code> is designed to build upon this package and allow for further flexibility and rapid experimentation for the end user.</p>
+<p>We will illustrate this with a short simulation.</p>
+<h2>Simulation</h2>
+<p>Let us generate some data.</p>
+<pre><code class="language-r">library(CVglasso)
+
+#  generate data from a sparse matrix
+# first compute covariance matrix
+S = matrix(0.7, nrow = 5, ncol = 5)
+for (i in 1:5){
+  for (j in 1:5){
+    S[i, j] = S[i, j]^abs(i - j)
+  }
+}
+
+# generate 100 x 5 matrix with rows drawn from iid N_p(0, S)
+set.seed(123)
+Z = matrix(rnorm(100*5), nrow = 100, ncol = 5)
+out = eigen(S, symmetric = TRUE)
+S.sqrt = out$vectors %*% diag(out$values^0.5) %*% t(out$vectors)
+X = Z %*% S.sqrt
+
+# snap shot of data
+head(X)
+</code></pre>
+<p>We have generated 100 samples (5 variables) from a normal distribution with mean equal to zero and an oracle covariance matrix $S$.</p>
+<pre><code class="language-r">
+# print oracle covariance matrix
+S
+
+# print inverse covariance matrix (omega)
+round(qr.solve(S), 5)
+</code></pre>
+<p>It turns out that this particular oracle covariance matrix (tapered matrix) has an inverse - or precision matrix - that is sparse (tri-diagonal). That is, the precision matrix has many zeros.</p>
+<p>In this particular setting, we could estimate $\Omega$ by taking the inverse of the sample covariance matrix $\hat{S} = \sum_{i = 1}^{n}(X_{i} - \bar{X})(X_{i} - \bar{X})^{T}/n$:</p>
+<pre><code class="language-r">
+# print inverse of sample precision matrix (perhaps a bad estimate)
+round(qr.solve(cov(X)*(nrow(X) - 1)/nrow(X)), 5)
+</code></pre>
+<p>However, because $\Omega$ is sparse, this estimator will likely perform very poorly. Notice the number of zeros in our oracle precision matrix compared to the inverse of the sample covariance matrix. Instead, we will use <code>CVglasso</code> to estimate $\Omega$.</p>
+<p>By default, <code>CVglasso</code> will estimate $\Omega$ using a lasso penalty (like <code>glasso</code>) but choose the optimal <code>lam</code> tuning parameters using k-fold cross validation.</p>
+<pre><code class="language-r">
+# cross validation for lam
+CVglasso(X, trace = &quot;none&quot;)
+</code></pre>
+<p><code>CVglasso</code> also has the capability to provide plots for the cross validation errors. This allows the user to analyze and select the appropriate tuning parameters.</p>
+<p>In the heatmap plot below, the more bright (white) areas of the heat map correspond to a better tuning parameter selection.</p>
+<pre><code class="language-r">
+# produce CV heat map
+CV = CVglasso(X, trace = &quot;none&quot;)
+plot(CV, type = &quot;heatmap&quot;)
+</code></pre>
+<p>We can also produce a line graph of the cross validation errors:</p>
+<pre><code class="language-r">
+# produce line graph for CV errors
+plot(CV, type = &quot;line&quot;)
+</code></pre>
+<p><code>CVglasso</code> contains a number of different criteria for selecting the optimal tuning parameters during cross validation. The package default is to choose the tuning parameters that maximize the log-likelihood (<code>crit.cv = loglik</code>). Other options include <code>AIC</code> and <code>BIC</code>.</p>
+<pre><code class="language-r">
+# AIC
+plot(CVglasso(X, crit.cv = &quot;AIC&quot;, trace = &quot;none&quot;))
+
+# BIC
+plot(CVglasso(X, crit.cv = &quot;BIC&quot;, trace = &quot;none&quot;))
+</code></pre>
+<p>This allows the user to select appropriate tuning parameters under various decision criteria. We also have the option to print <em>all</em> of the estimated precision matrices for each tuning parameter combination using the <code>path</code> option. This option should be used with <em>extreme</em> care when the dimension and sample size is large -- you may run into memory issues.</p>
+<pre><code class="language-r">
+# keep all estimates using path
+CV = CVglasso(X, path = TRUE, trace = &quot;none&quot;)
+
+# print only first three objects
+CV$Path[,,1:3]
+</code></pre>
+<h2>More advanced options</h2>
+<p>A huge issue in precision matrix estimation is the computational complexity when the sample size and dimension of our data is particularly large. There are a number of built-in options in <code>CVglasso</code> that can be used to improve computation speed:</p>
+<ul><li>Reduce the number of <code>lam</code> values during cross validation. The default number is 10.</li></ul>
+<pre><code class="language-r">
+# reduce number of lam to 5
+CV = CVglasso(X, nlam = 5)
+</code></pre>
+<ul><li>Reduce the number of <code>K</code> folds during cross validation. The default number is 5.</li></ul>
+<pre><code class="language-r">
+# reduce number of folds to 3
+CV = CVglasso(X, K = 3)
+</code></pre>
+<ul><li>Relax the convergence critera for the graphical lasso algorithm using the <code>tol</code> option. The default for each is 1e-4.</li></ul>
+<pre><code class="language-r">
+# relax convergence criteria
+CV = CVglasso(X, tol = 1e-3)
+</code></pre>
+<ul><li>Adjust the maximum number of iterations. The default is 1e4.</li></ul>
+<pre><code class="language-r">
+# adjust maximum number of iterations
+CV = CVglasso(X, maxit = 1e3)
+</code></pre>
+<ul><li>We can also opt to run our cross validation procedure in parallel. The user should check how many cores are on their system before using this option.</li></ul>
+<pre><code class="language-r">
+# parallel CV
+CV = CVglasso(X, cores = 3)
+</code></pre>
+</body>
+</html>

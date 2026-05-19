@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Benchmarks</title>
+<style>body{font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;max-width:900px;margin:2rem auto;line-height:1.5;padding:0 1rem}pre{background:#f6f8fa;padding:1rem;overflow:auto}code{background:#f6f8fa;padding:0.1rem 0.2rem}.note{color:#555}</style>
+</head>
+<body>
+<h1>Benchmarks</h1>
+<p><strong>Matt Galloway</strong></p>
+<p class="note">Installed vignette output for <code>Benchmark.Rmd</code>.</p>
+<p>This is a short effort to give users an idea of how long the functions take to process. The benchmarks were performed using the default R install on <a href="https://travis-ci.org/">Travis CI</a>.</p>
+<p>We will be estimating a tri-diagonal precision matrix with dimension $p = 100$:</p>
+<pre><code class="language-r">library(CVglasso)
+library(microbenchmark)
+
+#  generate data from tri-diagonal (sparse) matrix
+# compute covariance matrix (can confirm inverse is tri-diagonal)
+S = matrix(0, nrow = 100, ncol = 100)
+
+for (i in 1:100){
+  for (j in 1:100){
+    S[i, j] = 0.7^(abs(i - j))
+  }
+}
+
+# generate 1000 x 100 matrix with rows drawn from iid N_p(0, S)
+set.seed(123)
+Z = matrix(rnorm(1000*100), nrow = 1000, ncol = 100)
+out = eigen(S, symmetric = TRUE)
+S.sqrt = out$vectors %*% diag(out$values^0.5) %*% t(out$vectors)
+X = Z %*% S.sqrt
+
+# calculate sample covariance matrix
+sample = (nrow(X) - 1)/nrow(X)*cov(X)
+</code></pre>
+<ul><li>Default convergence tolerance with specified tuning parameter (no cross validation):</li></ul>
+<pre><code class="language-r">
+# benchmark CVglasso - defaults
+microbenchmark(CVglasso(S = sample, lam = 0.1, trace = &quot;none&quot;))
+</code></pre>
+<ul><li>Stricter convergence tolerance with specified tuning parameter (no cross validation):</li></ul>
+<pre><code class="language-r">
+# benchmark CVglasso - tolerance 1e-6
+microbenchmark(CVglasso(S = sample, lam = 0.1, tol = 1e-6, trace = &quot;none&quot;))
+</code></pre>
+<ul><li>Default convergence tolerance with cross validation for <code>lam</code>:</li></ul>
+<pre><code class="language-r">
+# benchmark CVglasso CV - default parameter grid
+microbenchmark(CVglasso(X, trace = &quot;none&quot;), times = 5)
+</code></pre>
+<ul><li>Parallel (<code>cores = 2</code>) cross validation:</li></ul>
+<pre><code class="language-r">
+# benchmark CVglasso parallel CV
+microbenchmark(CVglasso(X, cores = 2, trace = &quot;none&quot;), times = 5)
+</code></pre>
+</body>
+</html>

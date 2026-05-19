@@ -5,12 +5,12 @@ title: " CVglasso Tutorial"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{CVglasso Tutorial}
-  %\VignetteEngine{knitr::knitr}
-  %\usepackage[UTF-8]{inputenc}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, cache = TRUE, tidy = TRUE)
+knitr::opts_chunk$set(echo = TRUE, cache = FALSE, tidy = TRUE)
 ```
 
 
