@@ -15,3 +15,5 @@
 
 ^vignettes/.*\.html$
 ^vignettes/.*_files$
+^doc$
+^Meta$
